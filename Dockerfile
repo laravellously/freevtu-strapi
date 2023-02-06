@@ -1,30 +1,15 @@
-FROM node:16
 
-# Set up working directory
-WORKDIR /app
-
-# Copy package.json to root directory
-COPY package.json .
-
-# Copy yarn.lock to root directory
-COPY yarn.lock .
-
-# Install dependencies, but not generate a yarn.lock file and fail if an update is needed
-RUN yarn install --frozen-lockfile
-
-# Copy strapi project files
-# COPY favicon.ico ./favicon.ico
-COPY src/ src/
-COPY public/ public/
-COPY database/ database/
-COPY config/ config/
-# ...
-
-# Build admin panel
+FROM node:16-alpine
+# Installing libvips-dev for sharp Compatability
+RUN apk update && apk add --no-cache build-base gcc autoconf automake zlib-dev libpng-dev nasm bash vips-dev
+ARG NODE_ENV=development
+ENV NODE_ENV=${NODE_ENV}
+WORKDIR /opt/
+COPY ./package.json ./yarn.lock ./
+ENV PATH /opt/node_modules/.bin:$PATH
+RUN yarn config set network-timeout 600000 -g && yarn install
+WORKDIR /opt/app
+COPY ./ .
 RUN yarn build
-
-# Run on port 1337
 EXPOSE 1337
-
-# Start strapi server
-CMD ["yarn", "start"]
+CMD ["yarn", "develop"]
