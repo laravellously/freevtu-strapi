@@ -13,7 +13,7 @@ COPY yarn.lock .
 RUN yarn install --frozen-lockfile
 
 # Copy strapi project files
-COPY favicon.ico ./favicon.ico
+# COPY favicon.ico ./favicon.ico
 COPY src/ src/
 COPY public/ public/
 COPY database/ database/
