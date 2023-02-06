@@ -1,4 +1,4 @@
-FROM strapi/base:latest
+FROM node:18.14
 
 # Set up working directory
 WORKDIR /app
